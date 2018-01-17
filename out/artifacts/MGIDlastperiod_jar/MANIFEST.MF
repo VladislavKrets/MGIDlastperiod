@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: online.omnia.MGID.Main
+Created-By: 1.4.2_09 (Apple Computer, Inc.)
+
