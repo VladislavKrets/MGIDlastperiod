@@ -2,7 +2,9 @@ package online.omnia.MGID;
 
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +20,17 @@ public class Utils {
             if (!file.exists()) file.createNewFile();
 
             postbackURLWriter = new FileWriter(file, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private static FileWriter writer;
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-dd-MM hh:mm:ss");
+
+    public static void writeLog(String text) {
+        try { if (writer == null) writer = new FileWriter("MGIDLog.log", true);
+            writer.write(dateFormat.format(new Date()) + "\n" + text);
+            writer.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -56,9 +56,14 @@ public class Main {
                     e.printStackTrace();
                 }
                 Thread.sleep(205);
-                answer = HttpMethodUtils.getMethod("http://api.mgid.com/v1/goodhits/clients/"
-                        + accountsEntity.getClientsId() /*"141484"*/ + "/campaigns?token=" + accountsEntity.getApiKey()/*"b35913ab2499b95dbf09325a69c97b5d"*/);
-                while (count < 10) {
+               try {
+                   answer = HttpMethodUtils.getMethod("http://api.mgid.com/v1/goodhits/clients/"
+                           + accountsEntity.getClientsId() /*"141484"*/ + "/campaigns?token=" + accountsEntity.getApiKey()/*"b35913ab2499b95dbf09325a69c97b5d"*/);
+               } catch (Exception e) {
+                   Utils.write(e.toString());
+                   continue;
+               }
+               while (count < 10) {
                     try {
                         jsonCampaignEntities = gson.fromJson(answer, List.class);
                         break;
@@ -81,12 +86,17 @@ public class Main {
                 count = 0;
                 for (JsonCampaignEntity jsonCampaignEntity : jsonCampaignEntities) {
                     Thread.sleep(205);
-                    answer = HttpMethodUtils.getMethod("http://api.mgid.com/v1/goodhits/clients/"
-                            + accountsEntity.getClientsId()
-                            +"/teasers?token="
-                            + accountsEntity.getApiKey()
-                            + "&fields=[%27url%27]&campaign="
-                            + jsonCampaignEntity.getId());
+                    try {
+                        answer = HttpMethodUtils.getMethod("http://api.mgid.com/v1/goodhits/clients/"
+                                + accountsEntity.getClientsId()
+                                +"/teasers?token="
+                                + accountsEntity.getApiKey()
+                                + "&fields=[%27url%27]&campaign="
+                                + jsonCampaignEntity.getId());
+                    } catch (Exception e) {
+                        Utils.write(e.toString());
+                        continue;
+                    }
                     while (count < 10) {
                         try {
                             jsonTeaserMap = gson.fromJson(answer, new TypeToken<Map<String, JsonTeaser>>() {
@@ -122,12 +132,17 @@ public class Main {
                         e.printStackTrace();
                     }
                     Thread.sleep(205);
-                    answer = HttpMethodUtils.getMethod("http://api.mgid.com/v1/goodhits/campaigns/"
-                            + jsonCampaignEntity.getId() +
-                            "/quality-analysis/uid?token=" + accountsEntity.getApiKey()/*"b35913ab2499b95dbf09325a69c97b5d*/ + "&dateInterval=interval&startDate="
-                            + dateFormat.format(new Date(System.currentTimeMillis() - deltaTime - i * 24L * 60 * 60 * 1000))
-                            + "&endDate="
-                            + dateFormat.format(new Date(System.currentTimeMillis() - deltaTime - i * 24L * 60 * 60 * 1000)));
+                    try {
+                        answer = HttpMethodUtils.getMethod("http://api.mgid.com/v1/goodhits/campaigns/"
+                                + jsonCampaignEntity.getId() +
+                                "/quality-analysis/uid?token=" + accountsEntity.getApiKey()/*"b35913ab2499b95dbf09325a69c97b5d*/ + "&dateInterval=interval&startDate="
+                                + dateFormat.format(new Date(System.currentTimeMillis() - deltaTime - i * 24L * 60 * 60 * 1000))
+                                + "&endDate="
+                                + dateFormat.format(new Date(System.currentTimeMillis() - deltaTime - i * 24L * 60 * 60 * 1000)));
+                    } catch (Exception e) {
+                        Utils.write(e.toString());
+                        continue;
+                    }
                     answer = answer.replaceAll("\\{\"\\d+\":\\{\"\\d+-\\d+-\\d+_\\d+-\\d+-\\d+\":", "");
                     length = answer.length();
                     answer = answer.substring(0, length - 2);
